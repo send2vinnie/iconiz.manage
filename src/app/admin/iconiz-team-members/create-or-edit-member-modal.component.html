@@ -1,0 +1,99 @@
+﻿<div bsModal #createOrEditModal="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="createOrEditModal"
+     aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form *ngIf="active" #memberForm="ngForm" novalidate (ngSubmit)="save()">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span *ngIf="member.id">{{l("EditMember")}}: {{member.name_Chn}}</span>
+                        <span *ngIf="!member.id">{{l("CreateNewMember")}}</span>
+                    </h5>
+                    <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <tabset class="tab-container tabbable-line">
+                        <tab heading="{{l('MemberProperties')}}" customClass="m-tabs__item">
+                            <div class="row">
+                                <div class="col-sm-3 text-center margin-bottom-15 margin-top-15">
+                                    <img src="{{profilePicture}}" width="128" height="128" class="img-thumbnail img-rounded"/>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="form-group">
+                                        <label>{{l("ChangeProfilePicture")}}
+                                            <br/>
+                                            {{l("ProfilePicture_Change_Info", maxProfilPictureBytesUserFriendlyValue)}}
+                                        </label>
+                                        <input class="form-control" type="file" ng2FileSelect [uploader]="uploader"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label for="MemberId">{{l("id")}}</label>
+                                                <input id="MemberId" #MemberIdInput="ngModel" class="form-control" type="text" name="MemberId" [ngClass]="{'edited':member.id}" [(ngModel)]="member.id" disabled>
+                                                <validation-messages [formCtrl]="MemberIdInput"></validation-messages>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label for="priority">{{l("priority")}}</label>
+                                                <input id="priority" #MemberPriorityInput="ngModel" class="form-control" type="number" name="priority" [ngClass]="{'edited':member.priority}" [(ngModel)]="member.priority">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label for="isActive">{{l("Active")}}</label>
+                                                <input id="isActive" #MemberActiveInput="ngModel" class="form-control" type="checkbox" name="isActive" [ngClass]="{'edited':member.isActive}" [(ngModel)]="member.isActive">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="name_Chn">{{l("name_Chn")}} *</label>
+                                <input id="name_Chn" #memberNameChnInput="ngModel" type="text" name="name_Chn" class="form-control" [(ngModel)]="member.name_Chn" required maxlength="256">
+                                <validation-messages [formCtrl]="memberNameChnInput"></validation-messages>
+                            </div>
+                            <div class="form-group">
+                                <label for="name_Eng">{{l("name_Eng")}} *</label>
+                                <input id="name_Eng" #memberNameEngInput="ngModel" type="text" name="name_Eng" class="form-control" [(ngModel)]="member.name_Eng" required maxlength="256">
+                                <validation-messages [formCtrl]="memberNameEngInput"></validation-messages>
+                            </div>
+                            <div class="form-group">
+                                <label for="title_Chn">{{l("title_Chn")}} *</label>
+                                <input id="title_Chn" #memberTitleChnInput="ngModel" type="text" name="title_Chn" class="form-control" [(ngModel)]="member.title_Chn" required maxlength="256">
+                                <validation-messages [formCtrl]="memberTitleChnInput"></validation-messages>
+                            </div>
+                            <div class="form-group">
+                                <label for="title_Eng">{{l("title_Eng")}} *</label>
+                                <input id="title_Eng" #memberTitleEngInput="ngModel" type="text" name="title_Eng" class="form-control" [(ngModel)]="member.title_Eng" required maxlength="256">
+                                <validation-messages [formCtrl]="memberTitleEngInput"></validation-messages>
+                            </div>
+                            <div class="form-group">
+                                <label for="description_Chn">{{l("description_Chn")}} *</label>
+                                <textarea id="description_Chn" #memberDescChnInput="ngModel" rows="5" name="description_Chn" class="form-control" [(ngModel)]="member.description_Chn" required maxlength="65536"></textarea>
+                                <validation-messages [formCtrl]="memberDescChnInput"></validation-messages>
+                            </div>
+                            <div class="form-group">
+                                <label for="description_Eng">{{l("description_Eng")}} *</label>
+                                <textarea id="description_Eng" #memberDescEngInput="ngModel" rows="5" name="description_Eng" class="form-control" [(ngModel)]="member.description_Eng" required maxlength="65536"></textarea>
+                                <validation-messages [formCtrl]="memberDescEngInput"></validation-messages>
+                            </div>
+                            <div class="form-group">
+                                <label for="linkedIn">{{l("linkedIn")}}</label>
+                                <input id="linkedIn" #memberlinkedInInput="ngModel" type="text" name="linkedIn" class="form-control" [(ngModel)]="member.linkedIn" maxlength="256">
+                                <validation-messages [formCtrl]="memberlinkedInInput"></validation-messages>
+                            </div>
+                        </tab>
+                    </tabset>
+                </div>
+                <div class="modal-footer">
+                    <button [disabled]="saving" type="button" class="btn btn-secondary" (click)="close()">
+                        {{l("Cancel")}}
+                    </button>
+                    <button type="submit" class="btn btn-primary" [disabled]="!memberForm.form.valid"
+                            [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
