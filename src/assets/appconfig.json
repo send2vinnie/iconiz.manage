@@ -1,6 +1,6 @@
 {
-  "remoteServiceBaseUrl": "http://192.168.1.146:62114",
-  "appBaseUrl": "http://localhost:4200",
+  "remoteServiceBaseUrl": "http://srv.iconiz.io",
+  "appBaseUrl": "http://manage.iconiz.io",
   "localeMappings": [
     {
       "from": "pt-BR",

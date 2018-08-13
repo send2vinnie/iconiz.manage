@@ -47,9 +47,9 @@
                                     {{l('priority')}}
                                     <p-sortIcon field="priority"></p-sortIcon>
                                 </th>
-                               <th pSortableColumn="priority">
+                               <th pSortableColumn="isActive">
                                    {{l("Active")}}
-                                   <p-sortIcon field="priority"></p-sortIcon>
+                                   <p-sortIcon field="isActive"></p-sortIcon>
                                </th>
                                <th>{{l('Edit')}}</th>
                            </tr>
@@ -73,8 +73,9 @@
                                    <span title="{{record.priority}}">{{record.priority}}</span>
                                </td>
                                <td>
-                                   <span class="ui-column-title">{{l('isActive')}}</span>
-                                   <input id="isActive" type="checkbox" name="isActive" [ngClass]="{'edited':record.isActive}" disabled>
+                                   <span class="ui-column-title">{{l('Active')}}</span>
+                                   <span class="label label-success" *ngIf="record.isActive">{{l('Yes')}}</span>
+                                   <span class="label label-default" *ngIf="!record.isActive">{{l('No')}}</span>
                                </td>
                                <td>
                                    <button class="btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"

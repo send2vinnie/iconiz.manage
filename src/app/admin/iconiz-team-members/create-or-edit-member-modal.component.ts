@@ -84,8 +84,8 @@ export class CreateOrEditMemberModalComponent extends AppComponentBase implement
         if (!profilePictureId) {
             this.profilePicture = this.appRootUrl() + 'assets/common/images/default-profile-picture.png';
         } else {
+            this.profilePicture = this.appRootUrl() + 'assets/common/images/loading.gif';
             this._profileService.getProfilePictureById(profilePictureId).subscribe(result => {
-
                 if (result && result.profilePicture) {
                     this.profilePicture = 'data:image/jpeg;base64,' + result.profilePicture;
                 } else {
