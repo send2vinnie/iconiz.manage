@@ -198,8 +198,8 @@ export class AccountServiceProxy {
      * @input (optional) 
      * @return Success
      */
-    sendPasswordResetCode(input: SendPasswordResetCodeInput | null | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/Account/SendPasswordResetCode";
+    checkPasswordResetCode(input: CheckPasswordResetCodeInput | null | undefined): Observable<CheckPasswordResetCodeOutput> {
+        let url_ = this.baseUrl + "/api/services/app/Account/CheckPasswordResetCode";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(input);
@@ -210,24 +210,25 @@ export class AccountServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json", 
+                "Accept": "application/json"
             })
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processSendPasswordResetCode(response_);
+            return this.processCheckPasswordResetCode(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processSendPasswordResetCode(<any>response_);
+                    return this.processCheckPasswordResetCode(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<CheckPasswordResetCodeOutput>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<CheckPasswordResetCodeOutput>><any>_observableThrow(response_);
         }));
     }
 
-    protected processSendPasswordResetCode(response: HttpResponseBase): Observable<void> {
+    protected processCheckPasswordResetCode(response: HttpResponseBase): Observable<CheckPasswordResetCodeOutput> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -236,14 +237,17 @@ export class AccountServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? CheckPasswordResetCodeOutput.fromJS(resultData200) : new CheckPasswordResetCodeOutput();
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(<any>null);
+        return _observableOf<CheckPasswordResetCodeOutput>(<any>null);
     }
 
     /**
@@ -2814,6 +2818,129 @@ export class HostSettingsServiceProxy {
             }));
         }
         return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
+export class IconizFinanceServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @last_id (optional) 
+     * @return Success
+     */
+    getJinseTopic(last_id: string | null | undefined): Observable<JinseTopicListOutput[]> {
+        let url_ = this.baseUrl + "/api/services/app/IconizFinance/GetJinseTopic?";
+        if (last_id !== undefined)
+            url_ += "last_id=" + encodeURIComponent("" + last_id) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetJinseTopic(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetJinseTopic(<any>response_);
+                } catch (e) {
+                    return <Observable<JinseTopicListOutput[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<JinseTopicListOutput[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetJinseTopic(response: HttpResponseBase): Observable<JinseTopicListOutput[]> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [];
+                for (let item of resultData200)
+                    result200.push(JinseTopicListOutput.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<JinseTopicListOutput[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getJinseLive(): Observable<JinseLiveOutput> {
+        let url_ = this.baseUrl + "/api/services/app/IconizFinance/GetJinseLive";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetJinseLive(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetJinseLive(<any>response_);
+                } catch (e) {
+                    return <Observable<JinseLiveOutput>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<JinseLiveOutput>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetJinseLive(response: HttpResponseBase): Observable<JinseLiveOutput> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? JinseLiveOutput.fromJS(resultData200) : new JinseLiveOutput();
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<JinseLiveOutput>(<any>null);
     }
 }
 
@@ -7432,6 +7559,58 @@ export class TokenAuthServiceProxy {
     }
 
     /**
+     * @model (optional) 
+     * @return Success
+     */
+    sendTwoFactorValidateCode(model: SendTwoFactorValidateCodeModel | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/TokenAuth/SendTwoFactorValidateCode";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSendTwoFactorValidateCode(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSendTwoFactorValidateCode(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSendTwoFactorValidateCode(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
      * @impersonationToken (optional) 
      * @return Success
      */
@@ -8953,12 +9132,11 @@ export interface IResolveTenantIdInput {
 }
 
 export class RegisterInput implements IRegisterInput {
-    name!: string;
-    surname!: string;
-    userName!: string;
-    emailAddress!: string;
-    password!: string;
-    captchaResponse!: string | undefined;
+    emailAddress!: string | undefined;
+    emailAddressValidateCode!: string | undefined;
+    phoneNumber!: string | undefined;
+    phoneNumberValidateCode!: string | undefined;
+    password!: string | undefined;
 
     constructor(data?: IRegisterInput) {
         if (data) {
@@ -8971,12 +9149,11 @@ export class RegisterInput implements IRegisterInput {
 
     init(data?: any) {
         if (data) {
-            this.name = data["name"];
-            this.surname = data["surname"];
-            this.userName = data["userName"];
             this.emailAddress = data["emailAddress"];
+            this.emailAddressValidateCode = data["emailAddressValidateCode"];
+            this.phoneNumber = data["phoneNumber"];
+            this.phoneNumberValidateCode = data["phoneNumberValidateCode"];
             this.password = data["password"];
-            this.captchaResponse = data["captchaResponse"];
         }
     }
 
@@ -8989,23 +9166,21 @@ export class RegisterInput implements IRegisterInput {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["surname"] = this.surname;
-        data["userName"] = this.userName;
         data["emailAddress"] = this.emailAddress;
+        data["emailAddressValidateCode"] = this.emailAddressValidateCode;
+        data["phoneNumber"] = this.phoneNumber;
+        data["phoneNumberValidateCode"] = this.phoneNumberValidateCode;
         data["password"] = this.password;
-        data["captchaResponse"] = this.captchaResponse;
         return data; 
     }
 }
 
 export interface IRegisterInput {
-    name: string;
-    surname: string;
-    userName: string;
-    emailAddress: string;
-    password: string;
-    captchaResponse: string | undefined;
+    emailAddress: string | undefined;
+    emailAddressValidateCode: string | undefined;
+    phoneNumber: string | undefined;
+    phoneNumberValidateCode: string | undefined;
+    password: string | undefined;
 }
 
 export class RegisterOutput implements IRegisterOutput {
@@ -9044,10 +9219,13 @@ export interface IRegisterOutput {
     canLogin: boolean | undefined;
 }
 
-export class SendPasswordResetCodeInput implements ISendPasswordResetCodeInput {
-    emailAddress!: string;
+export class CheckPasswordResetCodeInput implements ICheckPasswordResetCodeInput {
+    emailAddress!: string | undefined;
+    emailAddressValidateCode!: string | undefined;
+    phoneNumber!: string | undefined;
+    phoneNumberValidateCode!: string | undefined;
 
-    constructor(data?: ISendPasswordResetCodeInput) {
+    constructor(data?: ICheckPasswordResetCodeInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -9059,12 +9237,15 @@ export class SendPasswordResetCodeInput implements ISendPasswordResetCodeInput {
     init(data?: any) {
         if (data) {
             this.emailAddress = data["emailAddress"];
+            this.emailAddressValidateCode = data["emailAddressValidateCode"];
+            this.phoneNumber = data["phoneNumber"];
+            this.phoneNumberValidateCode = data["phoneNumberValidateCode"];
         }
     }
 
-    static fromJS(data: any): SendPasswordResetCodeInput {
+    static fromJS(data: any): CheckPasswordResetCodeInput {
         data = typeof data === 'object' ? data : {};
-        let result = new SendPasswordResetCodeInput();
+        let result = new CheckPasswordResetCodeInput();
         result.init(data);
         return result;
     }
@@ -9072,12 +9253,62 @@ export class SendPasswordResetCodeInput implements ISendPasswordResetCodeInput {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["emailAddress"] = this.emailAddress;
+        data["emailAddressValidateCode"] = this.emailAddressValidateCode;
+        data["phoneNumber"] = this.phoneNumber;
+        data["phoneNumberValidateCode"] = this.phoneNumberValidateCode;
         return data; 
     }
 }
 
-export interface ISendPasswordResetCodeInput {
-    emailAddress: string;
+export interface ICheckPasswordResetCodeInput {
+    emailAddress: string | undefined;
+    emailAddressValidateCode: string | undefined;
+    phoneNumber: string | undefined;
+    phoneNumberValidateCode: string | undefined;
+}
+
+export class CheckPasswordResetCodeOutput implements ICheckPasswordResetCodeOutput {
+    userId!: number | undefined;
+    isCodeValidate!: boolean | undefined;
+    passwordResetCode!: string | undefined;
+
+    constructor(data?: ICheckPasswordResetCodeOutput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.userId = data["userId"];
+            this.isCodeValidate = data["isCodeValidate"];
+            this.passwordResetCode = data["passwordResetCode"];
+        }
+    }
+
+    static fromJS(data: any): CheckPasswordResetCodeOutput {
+        data = typeof data === 'object' ? data : {};
+        let result = new CheckPasswordResetCodeOutput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId;
+        data["isCodeValidate"] = this.isCodeValidate;
+        data["passwordResetCode"] = this.passwordResetCode;
+        return data; 
+    }
+}
+
+export interface ICheckPasswordResetCodeOutput {
+    userId: number | undefined;
+    isCodeValidate: boolean | undefined;
+    passwordResetCode: string | undefined;
 }
 
 export class ResetPasswordInput implements IResetPasswordInput {
@@ -12169,6 +12400,346 @@ export class SendTestEmailInput implements ISendTestEmailInput {
 
 export interface ISendTestEmailInput {
     emailAddress: string;
+}
+
+export class JinseTopicListOutput implements IJinseTopicListOutput {
+    id!: number | undefined;
+    url!: string | undefined;
+    title!: string | undefined;
+    summary!: string | undefined;
+    content!: string | undefined;
+    published_at!: string | undefined;
+    published_time!: moment.Moment | undefined;
+    resource!: string | undefined;
+    resource_url!: string | undefined;
+    author!: string | undefined;
+    thumbnail!: string | undefined;
+
+    constructor(data?: IJinseTopicListOutput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.url = data["url"];
+            this.title = data["title"];
+            this.summary = data["summary"];
+            this.content = data["content"];
+            this.published_at = data["published_at"];
+            this.published_time = data["published_time"] ? moment(data["published_time"].toString()) : <any>undefined;
+            this.resource = data["resource"];
+            this.resource_url = data["resource_url"];
+            this.author = data["author"];
+            this.thumbnail = data["thumbnail"];
+        }
+    }
+
+    static fromJS(data: any): JinseTopicListOutput {
+        data = typeof data === 'object' ? data : {};
+        let result = new JinseTopicListOutput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["url"] = this.url;
+        data["title"] = this.title;
+        data["summary"] = this.summary;
+        data["content"] = this.content;
+        data["published_at"] = this.published_at;
+        data["published_time"] = this.published_time ? this.published_time.toISOString() : <any>undefined;
+        data["resource"] = this.resource;
+        data["resource_url"] = this.resource_url;
+        data["author"] = this.author;
+        data["thumbnail"] = this.thumbnail;
+        return data; 
+    }
+}
+
+export interface IJinseTopicListOutput {
+    id: number | undefined;
+    url: string | undefined;
+    title: string | undefined;
+    summary: string | undefined;
+    content: string | undefined;
+    published_at: string | undefined;
+    published_time: moment.Moment | undefined;
+    resource: string | undefined;
+    resource_url: string | undefined;
+    author: string | undefined;
+    thumbnail: string | undefined;
+}
+
+export class JinseLiveOutput implements IJinseLiveOutput {
+    news!: number | undefined;
+    count!: number | undefined;
+    total!: number | undefined;
+    top_id!: number | undefined;
+    bottom_id!: number | undefined;
+    list!: JinseLiveOutputList[] | undefined;
+
+    constructor(data?: IJinseLiveOutput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.news = data["news"];
+            this.count = data["count"];
+            this.total = data["total"];
+            this.top_id = data["top_id"];
+            this.bottom_id = data["bottom_id"];
+            if (data["list"] && data["list"].constructor === Array) {
+                this.list = [];
+                for (let item of data["list"])
+                    this.list.push(JinseLiveOutputList.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): JinseLiveOutput {
+        data = typeof data === 'object' ? data : {};
+        let result = new JinseLiveOutput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["news"] = this.news;
+        data["count"] = this.count;
+        data["total"] = this.total;
+        data["top_id"] = this.top_id;
+        data["bottom_id"] = this.bottom_id;
+        if (this.list && this.list.constructor === Array) {
+            data["list"] = [];
+            for (let item of this.list)
+                data["list"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IJinseLiveOutput {
+    news: number | undefined;
+    count: number | undefined;
+    total: number | undefined;
+    top_id: number | undefined;
+    bottom_id: number | undefined;
+    list: JinseLiveOutputList[] | undefined;
+}
+
+export class JinseLiveOutputList implements IJinseLiveOutputList {
+    date!: moment.Moment | undefined;
+    lives!: JinseLiveOutputListLives[] | undefined;
+
+    constructor(data?: IJinseLiveOutputList) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.date = data["date"] ? moment(data["date"].toString()) : <any>undefined;
+            if (data["lives"] && data["lives"].constructor === Array) {
+                this.lives = [];
+                for (let item of data["lives"])
+                    this.lives.push(JinseLiveOutputListLives.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): JinseLiveOutputList {
+        data = typeof data === 'object' ? data : {};
+        let result = new JinseLiveOutputList();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        if (this.lives && this.lives.constructor === Array) {
+            data["lives"] = [];
+            for (let item of this.lives)
+                data["lives"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IJinseLiveOutputList {
+    date: moment.Moment | undefined;
+    lives: JinseLiveOutputListLives[] | undefined;
+}
+
+export class JinseLiveOutputListLives implements IJinseLiveOutputListLives {
+    id!: number | undefined;
+    content!: string | undefined;
+    content_prefix!: string | undefined;
+    link_name!: string | undefined;
+    link!: string | undefined;
+    grade!: number | undefined;
+    sort!: string | undefined;
+    highlight_color!: string | undefined;
+    images!: JinseLiveOutputListLivesImages[] | undefined;
+    created_at!: number | undefined;
+    up_counts!: number | undefined;
+    down_counts!: number | undefined;
+    zan_status!: string | undefined;
+    readings!: string | undefined;
+    extra_type!: string | undefined;
+    extra!: string | undefined;
+
+    constructor(data?: IJinseLiveOutputListLives) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.content = data["content"];
+            this.content_prefix = data["content_prefix"];
+            this.link_name = data["link_name"];
+            this.link = data["link"];
+            this.grade = data["grade"];
+            this.sort = data["sort"];
+            this.highlight_color = data["highlight_color"];
+            if (data["images"] && data["images"].constructor === Array) {
+                this.images = [];
+                for (let item of data["images"])
+                    this.images.push(JinseLiveOutputListLivesImages.fromJS(item));
+            }
+            this.created_at = data["created_at"];
+            this.up_counts = data["up_counts"];
+            this.down_counts = data["down_counts"];
+            this.zan_status = data["zan_status"];
+            this.readings = data["readings"];
+            this.extra_type = data["extra_type"];
+            this.extra = data["extra"];
+        }
+    }
+
+    static fromJS(data: any): JinseLiveOutputListLives {
+        data = typeof data === 'object' ? data : {};
+        let result = new JinseLiveOutputListLives();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["content"] = this.content;
+        data["content_prefix"] = this.content_prefix;
+        data["link_name"] = this.link_name;
+        data["link"] = this.link;
+        data["grade"] = this.grade;
+        data["sort"] = this.sort;
+        data["highlight_color"] = this.highlight_color;
+        if (this.images && this.images.constructor === Array) {
+            data["images"] = [];
+            for (let item of this.images)
+                data["images"].push(item.toJSON());
+        }
+        data["created_at"] = this.created_at;
+        data["up_counts"] = this.up_counts;
+        data["down_counts"] = this.down_counts;
+        data["zan_status"] = this.zan_status;
+        data["readings"] = this.readings;
+        data["extra_type"] = this.extra_type;
+        data["extra"] = this.extra;
+        return data; 
+    }
+}
+
+export interface IJinseLiveOutputListLives {
+    id: number | undefined;
+    content: string | undefined;
+    content_prefix: string | undefined;
+    link_name: string | undefined;
+    link: string | undefined;
+    grade: number | undefined;
+    sort: string | undefined;
+    highlight_color: string | undefined;
+    images: JinseLiveOutputListLivesImages[] | undefined;
+    created_at: number | undefined;
+    up_counts: number | undefined;
+    down_counts: number | undefined;
+    zan_status: string | undefined;
+    readings: string | undefined;
+    extra_type: string | undefined;
+    extra: string | undefined;
+}
+
+export class JinseLiveOutputListLivesImages implements IJinseLiveOutputListLivesImages {
+    url!: string | undefined;
+    thumbnail!: string | undefined;
+    height!: number | undefined;
+    width!: number | undefined;
+
+    constructor(data?: IJinseLiveOutputListLivesImages) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.url = data["url"];
+            this.thumbnail = data["thumbnail"];
+            this.height = data["height"];
+            this.width = data["width"];
+        }
+    }
+
+    static fromJS(data: any): JinseLiveOutputListLivesImages {
+        data = typeof data === 'object' ? data : {};
+        let result = new JinseLiveOutputListLivesImages();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["url"] = this.url;
+        data["thumbnail"] = this.thumbnail;
+        data["height"] = this.height;
+        data["width"] = this.width;
+        return data; 
+    }
+}
+
+export interface IJinseLiveOutputListLivesImages {
+    url: string | undefined;
+    thumbnail: string | undefined;
+    height: number | undefined;
+    width: number | undefined;
 }
 
 export class IconizTeamMember implements IIconizTeamMember {
@@ -16816,6 +17387,9 @@ export class TenantSettingsEditDto implements ITenantSettingsEditDto {
     ldap!: LdapSettingsEditDto | undefined;
     security!: SecuritySettingsEditDto;
     billing!: TenantBillingSettingsEditDto | undefined;
+    weixin!: WeixinSettingsEditDto;
+    jinse!: JinseSettingsEditDto;
+    sms!: SMSSettingsEditDto;
 
     constructor(data?: ITenantSettingsEditDto) {
         if (data) {
@@ -16827,6 +17401,9 @@ export class TenantSettingsEditDto implements ITenantSettingsEditDto {
         if (!data) {
             this.userManagement = new TenantUserManagementSettingsEditDto();
             this.security = new SecuritySettingsEditDto();
+            this.weixin = new WeixinSettingsEditDto();
+            this.jinse = new JinseSettingsEditDto();
+            this.sms = new SMSSettingsEditDto();
         }
     }
 
@@ -16838,6 +17415,9 @@ export class TenantSettingsEditDto implements ITenantSettingsEditDto {
             this.ldap = data["ldap"] ? LdapSettingsEditDto.fromJS(data["ldap"]) : <any>undefined;
             this.security = data["security"] ? SecuritySettingsEditDto.fromJS(data["security"]) : new SecuritySettingsEditDto();
             this.billing = data["billing"] ? TenantBillingSettingsEditDto.fromJS(data["billing"]) : <any>undefined;
+            this.weixin = data["weixin"] ? WeixinSettingsEditDto.fromJS(data["weixin"]) : new WeixinSettingsEditDto();
+            this.jinse = data["jinse"] ? JinseSettingsEditDto.fromJS(data["jinse"]) : new JinseSettingsEditDto();
+            this.sms = data["sms"] ? SMSSettingsEditDto.fromJS(data["sms"]) : new SMSSettingsEditDto();
         }
     }
 
@@ -16856,6 +17436,9 @@ export class TenantSettingsEditDto implements ITenantSettingsEditDto {
         data["ldap"] = this.ldap ? this.ldap.toJSON() : <any>undefined;
         data["security"] = this.security ? this.security.toJSON() : <any>undefined;
         data["billing"] = this.billing ? this.billing.toJSON() : <any>undefined;
+        data["weixin"] = this.weixin ? this.weixin.toJSON() : <any>undefined;
+        data["jinse"] = this.jinse ? this.jinse.toJSON() : <any>undefined;
+        data["sms"] = this.sms ? this.sms.toJSON() : <any>undefined;
         return data; 
     }
 }
@@ -16867,6 +17450,9 @@ export interface ITenantSettingsEditDto {
     ldap: LdapSettingsEditDto | undefined;
     security: SecuritySettingsEditDto;
     billing: TenantBillingSettingsEditDto | undefined;
+    weixin: WeixinSettingsEditDto;
+    jinse: JinseSettingsEditDto;
+    sms: SMSSettingsEditDto;
 }
 
 export class TenantUserManagementSettingsEditDto implements ITenantUserManagementSettingsEditDto {
@@ -17011,6 +17597,154 @@ export interface ITenantBillingSettingsEditDto {
     legalName: string | undefined;
     address: string | undefined;
     taxVatNo: string | undefined;
+}
+
+export class WeixinSettingsEditDto implements IWeixinSettingsEditDto {
+    appKey!: string | undefined;
+    appSecret!: string | undefined;
+
+    constructor(data?: IWeixinSettingsEditDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.appKey = data["appKey"];
+            this.appSecret = data["appSecret"];
+        }
+    }
+
+    static fromJS(data: any): WeixinSettingsEditDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new WeixinSettingsEditDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["appKey"] = this.appKey;
+        data["appSecret"] = this.appSecret;
+        return data; 
+    }
+}
+
+export interface IWeixinSettingsEditDto {
+    appKey: string | undefined;
+    appSecret: string | undefined;
+}
+
+export class JinseSettingsEditDto implements IJinseSettingsEditDto {
+    accessKey!: string | undefined;
+    secretKey!: string | undefined;
+
+    constructor(data?: IJinseSettingsEditDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.accessKey = data["accessKey"];
+            this.secretKey = data["secretKey"];
+        }
+    }
+
+    static fromJS(data: any): JinseSettingsEditDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new JinseSettingsEditDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["accessKey"] = this.accessKey;
+        data["secretKey"] = this.secretKey;
+        return data; 
+    }
+}
+
+export interface IJinseSettingsEditDto {
+    accessKey: string | undefined;
+    secretKey: string | undefined;
+}
+
+export class SMSSettingsEditDto implements ISMSSettingsEditDto {
+    appKey!: string | undefined;
+    appSecret!: string | undefined;
+    signName!: string | undefined;
+    userIdentityValidateTemplateCode!: string | undefined;
+    userLoginConfirmTemplateCode!: string | undefined;
+    userLoginErrorTemplateCode!: string | undefined;
+    userRegisterTemplateCode!: string | undefined;
+    userChangePasswordTemplateCode!: string | undefined;
+    userChangeInformationTemplateCode!: string | undefined;
+
+    constructor(data?: ISMSSettingsEditDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.appKey = data["appKey"];
+            this.appSecret = data["appSecret"];
+            this.signName = data["signName"];
+            this.userIdentityValidateTemplateCode = data["userIdentityValidateTemplateCode"];
+            this.userLoginConfirmTemplateCode = data["userLoginConfirmTemplateCode"];
+            this.userLoginErrorTemplateCode = data["userLoginErrorTemplateCode"];
+            this.userRegisterTemplateCode = data["userRegisterTemplateCode"];
+            this.userChangePasswordTemplateCode = data["userChangePasswordTemplateCode"];
+            this.userChangeInformationTemplateCode = data["userChangeInformationTemplateCode"];
+        }
+    }
+
+    static fromJS(data: any): SMSSettingsEditDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SMSSettingsEditDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["appKey"] = this.appKey;
+        data["appSecret"] = this.appSecret;
+        data["signName"] = this.signName;
+        data["userIdentityValidateTemplateCode"] = this.userIdentityValidateTemplateCode;
+        data["userLoginConfirmTemplateCode"] = this.userLoginConfirmTemplateCode;
+        data["userLoginErrorTemplateCode"] = this.userLoginErrorTemplateCode;
+        data["userRegisterTemplateCode"] = this.userRegisterTemplateCode;
+        data["userChangePasswordTemplateCode"] = this.userChangePasswordTemplateCode;
+        data["userChangeInformationTemplateCode"] = this.userChangeInformationTemplateCode;
+        return data; 
+    }
+}
+
+export interface ISMSSettingsEditDto {
+    appKey: string | undefined;
+    appSecret: string | undefined;
+    signName: string | undefined;
+    userIdentityValidateTemplateCode: string | undefined;
+    userLoginConfirmTemplateCode: string | undefined;
+    userLoginErrorTemplateCode: string | undefined;
+    userRegisterTemplateCode: string | undefined;
+    userChangePasswordTemplateCode: string | undefined;
+    userChangeInformationTemplateCode: string | undefined;
 }
 
 export class ListResultDtoOfNameValueDto implements IListResultDtoOfNameValueDto {
@@ -17234,6 +17968,46 @@ export class SendTwoFactorAuthCodeModel implements ISendTwoFactorAuthCodeModel {
 
 export interface ISendTwoFactorAuthCodeModel {
     userId: number | undefined;
+    provider: string;
+}
+
+export class SendTwoFactorValidateCodeModel implements ISendTwoFactorValidateCodeModel {
+    userName!: string;
+    provider!: string;
+
+    constructor(data?: ISendTwoFactorValidateCodeModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.userName = data["userName"];
+            this.provider = data["provider"];
+        }
+    }
+
+    static fromJS(data: any): SendTwoFactorValidateCodeModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new SendTwoFactorValidateCodeModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userName"] = this.userName;
+        data["provider"] = this.provider;
+        return data; 
+    }
+}
+
+export interface ISendTwoFactorValidateCodeModel {
+    userName: string;
     provider: string;
 }
 
