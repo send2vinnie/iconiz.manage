@@ -284,6 +284,67 @@
                             <input id="taxVatNo" type="text" name="taxVatNo" class="form-control" [ngClass]="{'edited':settings.billing.taxVatNo}" [(ngModel)]="settings.billing.taxVatNo" maxlength="32">
                         </div>
                     </tab>
+                    <tab *ngIf="true" heading="{{l('Weixin')}}" customClass="m-tabs__item">
+                        <h5>{{l("AppInformation")}}</h5>
+                        <div class="form-group">
+                            <label for="weixinAppKey">{{l("AppKey")}}</label>
+                            <input id="weixinAppKey" type="text" name="appKey" class="form-control" [ngClass]="{'edited':settings.weixin.appKey}" [(ngModel)]="settings.weixin.appKey" maxlength="64">
+                        </div>
+                        <div class="form-group">
+                            <label for="weixinAppSecret">{{l("AppSecret")}}</label>
+                            <input id="weixinAppSecret" type="text" name="appSecret" class="form-control" [ngClass]="{'edited':settings.weixin.appSecret}" [(ngModel)]="settings.weixin.appSecret" maxlength="256">
+                        </div>
+                    </tab>
+                    <tab *ngIf="true" heading="{{l('Jinse')}}" customClass="m-tabs__item">
+                        <h5>{{l("AccessInformation")}}</h5>
+                        <div class="form-group">
+                            <label for="accessKey">{{l("AccessKey")}}</label>
+                            <input id="accessKey" type="text" name="accessKey" class="form-control" [ngClass]="{'edited':settings.jinse.accessKey}" [(ngModel)]="settings.jinse.accessKey" maxlength="64">
+                        </div>
+                        <div class="form-group">
+                            <label for="secretKey">{{l("SecretKey")}}</label>
+                            <input id="secretKey" type="text" name="secretKey" class="form-control" [ngClass]="{'edited':settings.jinse.secretKey}" [(ngModel)]="settings.jinse.secretKey" maxlength="64">
+                        </div>
+                    </tab>
+                    <tab *ngIf="true" heading="{{l('SMS')}}" customClass="m-tabs__item">
+                        <h5>{{l("SMSInformation")}}</h5>
+                        <div class="form-group">
+                            <label for="SMSAppKey">{{l("AppKey")}}</label>
+                            <input id="SMSAppKey" type="text" name="appKey" class="form-control" [ngClass]="{'edited':settings.sms.appKey}" [(ngModel)]="settings.sms.appKey" maxlength="64">
+                        </div>
+                        <div class="form-group">
+                            <label for="SMSAppSecret">{{l("AppSecret")}}</label>
+                            <input id="SMSAppSecret" type="text" name="appSecret" class="form-control" [ngClass]="{'edited':settings.sms.appSecret}" [(ngModel)]="settings.sms.appSecret" maxlength="64">
+                        </div>
+                        <div class="form-group">
+                            <label for="signName">{{l("SignName")}}</label>
+                            <input id="signName" type="text" name="signName" class="form-control" [ngClass]="{'edited':settings.sms.signName}" [(ngModel)]="settings.sms.signName" maxlength="64">
+                        </div>
+                        <div class="form-group">
+                            <label for="userIdentityValidateTemplateCode">{{l("UserIdentityValidateTemplateCode")}}</label>
+                            <input id="userIdentityValidateTemplateCode" type="text" name="userIdentityValidateTemplateCode" class="form-control" [ngClass]="{'edited':settings.sms.userIdentityValidateTemplateCode}" [(ngModel)]="settings.sms.userIdentityValidateTemplateCode" maxlength="64">
+                        </div>
+                        <div class="form-group">
+                            <label for="userLoginConfirmTemplateCode">{{l("UserLoginConfirmTemplateCode")}}</label>
+                            <input id="userLoginConfirmTemplateCode" type="text" name="userLoginConfirmTemplateCode" class="form-control" [ngClass]="{'edited':settings.sms.userLoginConfirmTemplateCode}" [(ngModel)]="settings.sms.userLoginConfirmTemplateCode" maxlength="64">
+                        </div>
+                        <div class="form-group">
+                            <label for="userLoginErrorTemplateCode">{{l("UserLoginErrorTemplateCode")}}</label>
+                            <input id="userLoginErrorTemplateCode" type="text" name="userLoginErrorTemplateCode" class="form-control" [ngClass]="{'edited':settings.sms.userLoginErrorTemplateCode}" [(ngModel)]="settings.sms.userLoginErrorTemplateCode" maxlength="64">
+                        </div>
+                        <div class="form-group">
+                            <label for="userRegisterTemplateCode">{{l("UserRegisterTemplateCode")}}</label>
+                            <input id="userRegisterTemplateCode" type="text" name="userRegisterTemplateCode" class="form-control" [ngClass]="{'edited':settings.sms.userRegisterTemplateCode}" [(ngModel)]="settings.sms.userRegisterTemplateCode" maxlength="64">
+                        </div>
+                        <div class="form-group">
+                            <label for="userChangePasswordTemplateCode">{{l("UserChangePasswordTemplateCode")}}</label>
+                            <input id="userChangePasswordTemplateCode" type="text" name="userChangePasswordTemplateCode" class="form-control" [ngClass]="{'edited':settings.sms.userChangePasswordTemplateCode}" [(ngModel)]="settings.sms.userChangePasswordTemplateCode" maxlength="64">
+                        </div>
+                        <div class="form-group">
+                            <label for="userChangeInformationTemplateCode">{{l("UserChangeInformationTemplateCode")}}</label>
+                            <input id="userChangeInformationTemplateCode" type="text" name="userChangeInformationTemplateCode" class="form-control" [ngClass]="{'edited':settings.sms.userChangeInformationTemplateCode}" [(ngModel)]="settings.sms.userChangeInformationTemplateCode" maxlength="64">
+                        </div>
+                    </tab>
                 </tabset>
             </div>
         </div>
