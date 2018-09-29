@@ -54,6 +54,7 @@ import { ImpersonationService } from './users/impersonation.service';
 import { UsersComponent } from './users/users.component';
 import { IconizTeamMembersComponent } from './iconiz-team-members/iconiz-team-members.component';
 import { CreateOrEditMemberModalComponent } from './iconiz-team-members/create-or-edit-member-modal.component';
+import { IconizTopicComponent } from './iconiz-topic/iconiz-topic.component';
 
 @NgModule({
     imports: [
@@ -120,7 +121,8 @@ import { CreateOrEditMemberModalComponent } from './iconiz-team-members/create-o
         DemoUiEditorComponent,
         UiCustomizationComponent,
         IconizTeamMembersComponent,
-        CreateOrEditMemberModalComponent
+        CreateOrEditMemberModalComponent,
+        IconizTopicComponent
     ],
     exports: [
         AddMemberModalComponent

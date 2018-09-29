@@ -2833,13 +2833,22 @@ export class IconizFinanceServiceProxy {
     }
 
     /**
-     * @last_id (optional) 
+     * @keyword (optional) 
+     * @sorting (optional) 
+     * @maxResultCount (optional) 
+     * @skipCount (optional) 
      * @return Success
      */
-    getJinseTopic(last_id: string | null | undefined): Observable<JinseTopicListOutput[]> {
+    getJinseTopic(keyword: string | null | undefined, sorting: string | null | undefined, maxResultCount: number | null | undefined, skipCount: number | null | undefined): Observable<PagedResultDtoOfGetIconizTopicOutput> {
         let url_ = this.baseUrl + "/api/services/app/IconizFinance/GetJinseTopic?";
-        if (last_id !== undefined)
-            url_ += "last_id=" + encodeURIComponent("" + last_id) + "&"; 
+        if (keyword !== undefined)
+            url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&"; 
+        if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&"; 
+        if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&"; 
+        if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&"; 
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -2858,14 +2867,66 @@ export class IconizFinanceServiceProxy {
                 try {
                     return this.processGetJinseTopic(<any>response_);
                 } catch (e) {
-                    return <Observable<JinseTopicListOutput[]>><any>_observableThrow(e);
+                    return <Observable<PagedResultDtoOfGetIconizTopicOutput>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<JinseTopicListOutput[]>><any>_observableThrow(response_);
+                return <Observable<PagedResultDtoOfGetIconizTopicOutput>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetJinseTopic(response: HttpResponseBase): Observable<JinseTopicListOutput[]> {
+    protected processGetJinseTopic(response: HttpResponseBase): Observable<PagedResultDtoOfGetIconizTopicOutput> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? PagedResultDtoOfGetIconizTopicOutput.fromJS(resultData200) : new PagedResultDtoOfGetIconizTopicOutput();
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PagedResultDtoOfGetIconizTopicOutput>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getJinseTickers(): Observable<JinseTicker[]> {
+        let url_ = this.baseUrl + "/api/services/app/IconizFinance/GetJinseTickers";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetJinseTickers(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetJinseTickers(<any>response_);
+                } catch (e) {
+                    return <Observable<JinseTicker[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<JinseTicker[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetJinseTickers(response: HttpResponseBase): Observable<JinseTicker[]> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -2879,7 +2940,7 @@ export class IconizFinanceServiceProxy {
             if (resultData200 && resultData200.constructor === Array) {
                 result200 = [];
                 for (let item of resultData200)
-                    result200.push(JinseTopicListOutput.fromJS(item));
+                    result200.push(JinseTicker.fromJS(item));
             }
             return _observableOf(result200);
             }));
@@ -2888,7 +2949,62 @@ export class IconizFinanceServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<JinseTopicListOutput[]>(<any>null);
+        return _observableOf<JinseTicker[]>(<any>null);
+    }
+
+    /**
+     * @id (optional) 
+     * @return Success
+     */
+    getOneJinseTopic(id: number | null | undefined): Observable<IconizTopicOneDto> {
+        let url_ = this.baseUrl + "/api/services/app/IconizFinance/GetOneJinseTopic?";
+        if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetOneJinseTopic(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetOneJinseTopic(<any>response_);
+                } catch (e) {
+                    return <Observable<IconizTopicOneDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<IconizTopicOneDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetOneJinseTopic(response: HttpResponseBase): Observable<IconizTopicOneDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? IconizTopicOneDto.fromJS(resultData200) : new IconizTopicOneDto();
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<IconizTopicOneDto>(<any>null);
     }
 
     /**
@@ -2941,6 +3057,112 @@ export class IconizFinanceServiceProxy {
             }));
         }
         return _observableOf<JinseLiveOutput>(<any>null);
+    }
+
+    /**
+     * @type (optional) 
+     * @topicId (optional) 
+     * @return Success
+     */
+    postUpOrDown(type: string | null | undefined, topicId: number | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/IconizFinance/PostUpOrDown?";
+        if (type !== undefined)
+            url_ += "type=" + encodeURIComponent("" + type) + "&"; 
+        if (topicId !== undefined)
+            url_ += "topicId=" + encodeURIComponent("" + topicId) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPostUpOrDown(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPostUpOrDown(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPostUpOrDown(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @input (optional) 
+     * @return Success
+     */
+    postNewComment(input: IconizTopicNewCommentInput | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/IconizFinance/PostNewComment";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(input);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPostNewComment(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPostNewComment(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPostNewComment(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
     }
 }
 
@@ -3215,6 +3437,297 @@ export class IconizTeamMemberServiceProxy {
     }
 
     protected processDeleteIconizTeamMember(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
+export class IconizTopicServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @id (optional) 
+     * @return Success
+     */
+    get(id: number | null | undefined): Observable<IconizTopicEditDto> {
+        let url_ = this.baseUrl + "/api/services/app/IconizTopic/Get?";
+        if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<IconizTopicEditDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<IconizTopicEditDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<IconizTopicEditDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? IconizTopicEditDto.fromJS(resultData200) : new IconizTopicEditDto();
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<IconizTopicEditDto>(<any>null);
+    }
+
+    /**
+     * @sorting (optional) 
+     * @skipCount (optional) 
+     * @maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(sorting: string | null | undefined, skipCount: number | null | undefined, maxResultCount: number | null | undefined): Observable<PagedResultDtoOfIconizTopicEditDto> {
+        let url_ = this.baseUrl + "/api/services/app/IconizTopic/GetAll?";
+        if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&"; 
+        if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&"; 
+        if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<PagedResultDtoOfIconizTopicEditDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PagedResultDtoOfIconizTopicEditDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfIconizTopicEditDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? PagedResultDtoOfIconizTopicEditDto.fromJS(resultData200) : new PagedResultDtoOfIconizTopicEditDto();
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PagedResultDtoOfIconizTopicEditDto>(<any>null);
+    }
+
+    /**
+     * @input (optional) 
+     * @return Success
+     */
+    create(input: IconizTopicEditDto | null | undefined): Observable<IconizTopicEditDto> {
+        let url_ = this.baseUrl + "/api/services/app/IconizTopic/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(input);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<IconizTopicEditDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<IconizTopicEditDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<IconizTopicEditDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? IconizTopicEditDto.fromJS(resultData200) : new IconizTopicEditDto();
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<IconizTopicEditDto>(<any>null);
+    }
+
+    /**
+     * @input (optional) 
+     * @return Success
+     */
+    update(input: IconizTopicEditDto | null | undefined): Observable<IconizTopicEditDto> {
+        let url_ = this.baseUrl + "/api/services/app/IconizTopic/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(input);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<IconizTopicEditDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<IconizTopicEditDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<IconizTopicEditDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? IconizTopicEditDto.fromJS(resultData200) : new IconizTopicEditDto();
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<IconizTopicEditDto>(<any>null);
+    }
+
+    /**
+     * @id (optional) 
+     * @return Success
+     */
+    delete(id: number | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/IconizTopic/Delete?";
+        if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -12402,20 +12915,72 @@ export interface ISendTestEmailInput {
     emailAddress: string;
 }
 
-export class JinseTopicListOutput implements IJinseTopicListOutput {
+export class PagedResultDtoOfGetIconizTopicOutput implements IPagedResultDtoOfGetIconizTopicOutput {
+    totalCount!: number | undefined;
+    items!: GetIconizTopicOutput[] | undefined;
+
+    constructor(data?: IPagedResultDtoOfGetIconizTopicOutput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.totalCount = data["totalCount"];
+            if (data["items"] && data["items"].constructor === Array) {
+                this.items = [];
+                for (let item of data["items"])
+                    this.items.push(GetIconizTopicOutput.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PagedResultDtoOfGetIconizTopicOutput {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagedResultDtoOfGetIconizTopicOutput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        if (this.items && this.items.constructor === Array) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IPagedResultDtoOfGetIconizTopicOutput {
+    totalCount: number | undefined;
+    items: GetIconizTopicOutput[] | undefined;
+}
+
+export class GetIconizTopicOutput implements IGetIconizTopicOutput {
     id!: number | undefined;
     url!: string | undefined;
     title!: string | undefined;
     summary!: string | undefined;
-    content!: string | undefined;
-    published_at!: string | undefined;
-    published_time!: moment.Moment | undefined;
+    keyWords!: string | undefined;
+    publishTime!: moment.Moment | undefined;
     resource!: string | undefined;
-    resource_url!: string | undefined;
+    resourceUrl!: string | undefined;
     author!: string | undefined;
     thumbnail!: string | undefined;
+    upCount!: number | undefined;
+    downCount!: number | undefined;
+    commitCount!: number | undefined;
+    readCount!: string | undefined;
+    raty!: number | undefined;
 
-    constructor(data?: IJinseTopicListOutput) {
+    constructor(data?: IGetIconizTopicOutput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -12430,19 +12995,23 @@ export class JinseTopicListOutput implements IJinseTopicListOutput {
             this.url = data["url"];
             this.title = data["title"];
             this.summary = data["summary"];
-            this.content = data["content"];
-            this.published_at = data["published_at"];
-            this.published_time = data["published_time"] ? moment(data["published_time"].toString()) : <any>undefined;
+            this.keyWords = data["keyWords"];
+            this.publishTime = data["publishTime"] ? moment(data["publishTime"].toString()) : <any>undefined;
             this.resource = data["resource"];
-            this.resource_url = data["resource_url"];
+            this.resourceUrl = data["resourceUrl"];
             this.author = data["author"];
             this.thumbnail = data["thumbnail"];
+            this.upCount = data["upCount"];
+            this.downCount = data["downCount"];
+            this.commitCount = data["commitCount"];
+            this.readCount = data["readCount"];
+            this.raty = data["raty"];
         }
     }
 
-    static fromJS(data: any): JinseTopicListOutput {
+    static fromJS(data: any): GetIconizTopicOutput {
         data = typeof data === 'object' ? data : {};
-        let result = new JinseTopicListOutput();
+        let result = new GetIconizTopicOutput();
         result.init(data);
         return result;
     }
@@ -12453,29 +13022,301 @@ export class JinseTopicListOutput implements IJinseTopicListOutput {
         data["url"] = this.url;
         data["title"] = this.title;
         data["summary"] = this.summary;
-        data["content"] = this.content;
-        data["published_at"] = this.published_at;
-        data["published_time"] = this.published_time ? this.published_time.toISOString() : <any>undefined;
+        data["keyWords"] = this.keyWords;
+        data["publishTime"] = this.publishTime ? this.publishTime.toISOString() : <any>undefined;
         data["resource"] = this.resource;
-        data["resource_url"] = this.resource_url;
+        data["resourceUrl"] = this.resourceUrl;
         data["author"] = this.author;
         data["thumbnail"] = this.thumbnail;
+        data["upCount"] = this.upCount;
+        data["downCount"] = this.downCount;
+        data["commitCount"] = this.commitCount;
+        data["readCount"] = this.readCount;
+        data["raty"] = this.raty;
         return data; 
     }
 }
 
-export interface IJinseTopicListOutput {
+export interface IGetIconizTopicOutput {
     id: number | undefined;
     url: string | undefined;
     title: string | undefined;
     summary: string | undefined;
-    content: string | undefined;
-    published_at: string | undefined;
-    published_time: moment.Moment | undefined;
+    keyWords: string | undefined;
+    publishTime: moment.Moment | undefined;
     resource: string | undefined;
-    resource_url: string | undefined;
+    resourceUrl: string | undefined;
     author: string | undefined;
     thumbnail: string | undefined;
+    upCount: number | undefined;
+    downCount: number | undefined;
+    commitCount: number | undefined;
+    readCount: string | undefined;
+    raty: number | undefined;
+}
+
+export class JinseTicker implements IJinseTicker {
+    ticker!: string | undefined;
+    exchangeName!: string | undefined;
+    base!: string | undefined;
+    currency!: string | undefined;
+    symbol!: string | undefined;
+    high!: number | undefined;
+    open!: number | undefined;
+    close!: number | undefined;
+    low!: number | undefined;
+    vol!: number | undefined;
+    degree!: number | undefined;
+    dateTime!: number | undefined;
+
+    constructor(data?: IJinseTicker) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.ticker = data["ticker"];
+            this.exchangeName = data["exchangeName"];
+            this.base = data["base"];
+            this.currency = data["currency"];
+            this.symbol = data["symbol"];
+            this.high = data["high"];
+            this.open = data["open"];
+            this.close = data["close"];
+            this.low = data["low"];
+            this.vol = data["vol"];
+            this.degree = data["degree"];
+            this.dateTime = data["dateTime"];
+        }
+    }
+
+    static fromJS(data: any): JinseTicker {
+        data = typeof data === 'object' ? data : {};
+        let result = new JinseTicker();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["ticker"] = this.ticker;
+        data["exchangeName"] = this.exchangeName;
+        data["base"] = this.base;
+        data["currency"] = this.currency;
+        data["symbol"] = this.symbol;
+        data["high"] = this.high;
+        data["open"] = this.open;
+        data["close"] = this.close;
+        data["low"] = this.low;
+        data["vol"] = this.vol;
+        data["degree"] = this.degree;
+        data["dateTime"] = this.dateTime;
+        return data; 
+    }
+}
+
+export interface IJinseTicker {
+    ticker: string | undefined;
+    exchangeName: string | undefined;
+    base: string | undefined;
+    currency: string | undefined;
+    symbol: string | undefined;
+    high: number | undefined;
+    open: number | undefined;
+    close: number | undefined;
+    low: number | undefined;
+    vol: number | undefined;
+    degree: number | undefined;
+    dateTime: number | undefined;
+}
+
+export class IconizTopicOneDto implements IIconizTopicOneDto {
+    userId!: number | undefined;
+    creationTime!: moment.Moment | undefined;
+    iconizTopicComments!: IconizTopicCommentDto[] | undefined;
+    url!: string | undefined;
+    title!: string | undefined;
+    summary!: string | undefined;
+    keyWords!: string | undefined;
+    content!: string | undefined;
+    publishTime!: moment.Moment | undefined;
+    category!: string | undefined;
+    category2!: string | undefined;
+    resource!: string | undefined;
+    resourceUrl!: string | undefined;
+    author!: string | undefined;
+    thumbnail!: string | undefined;
+    upCount!: number | undefined;
+    downCount!: number | undefined;
+    commitCount!: number | undefined;
+    readCount!: string | undefined;
+    raty!: number | undefined;
+    topicCommentStatus!: number | undefined;
+
+    constructor(data?: IIconizTopicOneDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.userId = data["userId"];
+            this.creationTime = data["creationTime"] ? moment(data["creationTime"].toString()) : <any>undefined;
+            if (data["iconizTopicComments"] && data["iconizTopicComments"].constructor === Array) {
+                this.iconizTopicComments = [];
+                for (let item of data["iconizTopicComments"])
+                    this.iconizTopicComments.push(IconizTopicCommentDto.fromJS(item));
+            }
+            this.url = data["url"];
+            this.title = data["title"];
+            this.summary = data["summary"];
+            this.keyWords = data["keyWords"];
+            this.content = data["content"];
+            this.publishTime = data["publishTime"] ? moment(data["publishTime"].toString()) : <any>undefined;
+            this.category = data["category"];
+            this.category2 = data["category2"];
+            this.resource = data["resource"];
+            this.resourceUrl = data["resourceUrl"];
+            this.author = data["author"];
+            this.thumbnail = data["thumbnail"];
+            this.upCount = data["upCount"];
+            this.downCount = data["downCount"];
+            this.commitCount = data["commitCount"];
+            this.readCount = data["readCount"];
+            this.raty = data["raty"];
+            this.topicCommentStatus = data["topicCommentStatus"];
+        }
+    }
+
+    static fromJS(data: any): IconizTopicOneDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new IconizTopicOneDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        if (this.iconizTopicComments && this.iconizTopicComments.constructor === Array) {
+            data["iconizTopicComments"] = [];
+            for (let item of this.iconizTopicComments)
+                data["iconizTopicComments"].push(item.toJSON());
+        }
+        data["url"] = this.url;
+        data["title"] = this.title;
+        data["summary"] = this.summary;
+        data["keyWords"] = this.keyWords;
+        data["content"] = this.content;
+        data["publishTime"] = this.publishTime ? this.publishTime.toISOString() : <any>undefined;
+        data["category"] = this.category;
+        data["category2"] = this.category2;
+        data["resource"] = this.resource;
+        data["resourceUrl"] = this.resourceUrl;
+        data["author"] = this.author;
+        data["thumbnail"] = this.thumbnail;
+        data["upCount"] = this.upCount;
+        data["downCount"] = this.downCount;
+        data["commitCount"] = this.commitCount;
+        data["readCount"] = this.readCount;
+        data["raty"] = this.raty;
+        data["topicCommentStatus"] = this.topicCommentStatus;
+        return data; 
+    }
+}
+
+export interface IIconizTopicOneDto {
+    userId: number | undefined;
+    creationTime: moment.Moment | undefined;
+    iconizTopicComments: IconizTopicCommentDto[] | undefined;
+    url: string | undefined;
+    title: string | undefined;
+    summary: string | undefined;
+    keyWords: string | undefined;
+    content: string | undefined;
+    publishTime: moment.Moment | undefined;
+    category: string | undefined;
+    category2: string | undefined;
+    resource: string | undefined;
+    resourceUrl: string | undefined;
+    author: string | undefined;
+    thumbnail: string | undefined;
+    upCount: number | undefined;
+    downCount: number | undefined;
+    commitCount: number | undefined;
+    readCount: string | undefined;
+    raty: number | undefined;
+    topicCommentStatus: number | undefined;
+}
+
+export class IconizTopicCommentDto implements IIconizTopicCommentDto {
+    id!: number | undefined;
+    authorName!: string | undefined;
+    authorIP!: string | undefined;
+    creationTime!: moment.Moment | undefined;
+    content!: string | undefined;
+    raty!: number | undefined;
+    parent!: number | undefined;
+
+    constructor(data?: IIconizTopicCommentDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.authorName = data["authorName"];
+            this.authorIP = data["authorIP"];
+            this.creationTime = data["creationTime"] ? moment(data["creationTime"].toString()) : <any>undefined;
+            this.content = data["content"];
+            this.raty = data["raty"];
+            this.parent = data["parent"];
+        }
+    }
+
+    static fromJS(data: any): IconizTopicCommentDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new IconizTopicCommentDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["authorName"] = this.authorName;
+        data["authorIP"] = this.authorIP;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["content"] = this.content;
+        data["raty"] = this.raty;
+        data["parent"] = this.parent;
+        return data; 
+    }
+}
+
+export interface IIconizTopicCommentDto {
+    id: number | undefined;
+    authorName: string | undefined;
+    authorIP: string | undefined;
+    creationTime: moment.Moment | undefined;
+    content: string | undefined;
+    raty: number | undefined;
+    parent: number | undefined;
 }
 
 export class JinseLiveOutput implements IJinseLiveOutput {
@@ -12740,6 +13581,54 @@ export interface IJinseLiveOutputListLivesImages {
     thumbnail: string | undefined;
     height: number | undefined;
     width: number | undefined;
+}
+
+export class IconizTopicNewCommentInput implements IIconizTopicNewCommentInput {
+    topicId!: number | undefined;
+    content!: string | undefined;
+    raty!: number | undefined;
+    parent!: number | undefined;
+
+    constructor(data?: IIconizTopicNewCommentInput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.topicId = data["topicId"];
+            this.content = data["content"];
+            this.raty = data["raty"];
+            this.parent = data["parent"];
+        }
+    }
+
+    static fromJS(data: any): IconizTopicNewCommentInput {
+        data = typeof data === 'object' ? data : {};
+        let result = new IconizTopicNewCommentInput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["topicId"] = this.topicId;
+        data["content"] = this.content;
+        data["raty"] = this.raty;
+        data["parent"] = this.parent;
+        return data; 
+    }
+}
+
+export interface IIconizTopicNewCommentInput {
+    topicId: number | undefined;
+    content: string | undefined;
+    raty: number | undefined;
+    parent: number | undefined;
 }
 
 export class IconizTeamMember implements IIconizTeamMember {
@@ -13016,6 +13905,182 @@ export interface ITeamMemberEditDto {
     profilePictureId: string | undefined;
     isActive: boolean | undefined;
     marginTop: number | undefined;
+}
+
+export class IconizTopicEditDto implements IIconizTopicEditDto {
+    userId!: number | undefined;
+    creationTime!: moment.Moment | undefined;
+    sourceId!: number | undefined;
+    source!: string | undefined;
+    url!: string | undefined;
+    title!: string | undefined;
+    summary!: string | undefined;
+    keyWords!: string | undefined;
+    content!: string | undefined;
+    publishTime!: moment.Moment | undefined;
+    category!: string | undefined;
+    category2!: string | undefined;
+    resource!: string | undefined;
+    resourceUrl!: string | undefined;
+    author!: string | undefined;
+    thumbnail!: string | undefined;
+    upCount!: number | undefined;
+    downCount!: number | undefined;
+    commitCount!: number | undefined;
+    readCount!: number | undefined;
+    raty!: number | undefined;
+    topicStatus!: IconizTopicEditDtoTopicStatus | undefined;
+    topicCommentStatus!: IconizTopicEditDtoTopicCommentStatus | undefined;
+    id!: number | undefined;
+
+    constructor(data?: IIconizTopicEditDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.userId = data["userId"];
+            this.creationTime = data["creationTime"] ? moment(data["creationTime"].toString()) : <any>undefined;
+            this.sourceId = data["sourceId"];
+            this.source = data["source"];
+            this.url = data["url"];
+            this.title = data["title"];
+            this.summary = data["summary"];
+            this.keyWords = data["keyWords"];
+            this.content = data["content"];
+            this.publishTime = data["publishTime"] ? moment(data["publishTime"].toString()) : <any>undefined;
+            this.category = data["category"];
+            this.category2 = data["category2"];
+            this.resource = data["resource"];
+            this.resourceUrl = data["resourceUrl"];
+            this.author = data["author"];
+            this.thumbnail = data["thumbnail"];
+            this.upCount = data["upCount"];
+            this.downCount = data["downCount"];
+            this.commitCount = data["commitCount"];
+            this.readCount = data["readCount"];
+            this.raty = data["raty"];
+            this.topicStatus = data["topicStatus"];
+            this.topicCommentStatus = data["topicCommentStatus"];
+            this.id = data["id"];
+        }
+    }
+
+    static fromJS(data: any): IconizTopicEditDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new IconizTopicEditDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["sourceId"] = this.sourceId;
+        data["source"] = this.source;
+        data["url"] = this.url;
+        data["title"] = this.title;
+        data["summary"] = this.summary;
+        data["keyWords"] = this.keyWords;
+        data["content"] = this.content;
+        data["publishTime"] = this.publishTime ? this.publishTime.toISOString() : <any>undefined;
+        data["category"] = this.category;
+        data["category2"] = this.category2;
+        data["resource"] = this.resource;
+        data["resourceUrl"] = this.resourceUrl;
+        data["author"] = this.author;
+        data["thumbnail"] = this.thumbnail;
+        data["upCount"] = this.upCount;
+        data["downCount"] = this.downCount;
+        data["commitCount"] = this.commitCount;
+        data["readCount"] = this.readCount;
+        data["raty"] = this.raty;
+        data["topicStatus"] = this.topicStatus;
+        data["topicCommentStatus"] = this.topicCommentStatus;
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface IIconizTopicEditDto {
+    userId: number | undefined;
+    creationTime: moment.Moment | undefined;
+    sourceId: number | undefined;
+    source: string | undefined;
+    url: string | undefined;
+    title: string | undefined;
+    summary: string | undefined;
+    keyWords: string | undefined;
+    content: string | undefined;
+    publishTime: moment.Moment | undefined;
+    category: string | undefined;
+    category2: string | undefined;
+    resource: string | undefined;
+    resourceUrl: string | undefined;
+    author: string | undefined;
+    thumbnail: string | undefined;
+    upCount: number | undefined;
+    downCount: number | undefined;
+    commitCount: number | undefined;
+    readCount: number | undefined;
+    raty: number | undefined;
+    topicStatus: IconizTopicEditDtoTopicStatus | undefined;
+    topicCommentStatus: IconizTopicEditDtoTopicCommentStatus | undefined;
+    id: number | undefined;
+}
+
+export class PagedResultDtoOfIconizTopicEditDto implements IPagedResultDtoOfIconizTopicEditDto {
+    totalCount!: number | undefined;
+    items!: IconizTopicEditDto[] | undefined;
+
+    constructor(data?: IPagedResultDtoOfIconizTopicEditDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.totalCount = data["totalCount"];
+            if (data["items"] && data["items"].constructor === Array) {
+                this.items = [];
+                for (let item of data["items"])
+                    this.items.push(IconizTopicEditDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PagedResultDtoOfIconizTopicEditDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagedResultDtoOfIconizTopicEditDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        if (this.items && this.items.constructor === Array) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IPagedResultDtoOfIconizTopicEditDto {
+    totalCount: number | undefined;
+    items: IconizTopicEditDto[] | undefined;
 }
 
 export class InstallDto implements IInstallDto {
@@ -19526,6 +20591,20 @@ export enum ChatMessageDtoReadState {
 }
 
 export enum ChatMessageDtoReceiverReadState {
+    _1 = 1, 
+    _2 = 2, 
+}
+
+export enum IconizTopicEditDtoTopicStatus {
+    _0 = 0, 
+    _1 = 1, 
+    _2 = 2, 
+    _3 = 3, 
+    _4 = 4, 
+}
+
+export enum IconizTopicEditDtoTopicCommentStatus {
+    _0 = 0, 
     _1 = 1, 
     _2 = 2, 
 }

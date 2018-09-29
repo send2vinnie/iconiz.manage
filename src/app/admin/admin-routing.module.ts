@@ -18,6 +18,7 @@ import { TenantsComponent } from './tenants/tenants.component';
 import { UiCustomizationComponent } from './ui-customization/ui-customization.component';
 import { UsersComponent } from './users/users.component';
 import { IconizTeamMembersComponent } from './iconiz-team-members/iconiz-team-members.component';
+import { IconizTopicComponent } from './iconiz-topic/iconiz-topic.component';
 
 @NgModule({
     imports: [
@@ -43,6 +44,7 @@ import { IconizTeamMembersComponent } from './iconiz-team-members/iconiz-team-me
                     { path: 'install', component: InstallComponent },
                     { path: 'ui-customization', component: UiCustomizationComponent },
                     { path: 'iconiz-team-members', component: IconizTeamMembersComponent, data: { permission: 'Pages.IconizTeamMember' } },
+                    { path: 'iconiz-topic', component: IconizTopicComponent, data: { permission: 'Pages.IconizTopic' } }
                 ]
             }
         ])

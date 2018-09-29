@@ -1,5 +1,5 @@
 {
-  "remoteServiceBaseUrl": "http://srv.iconiz.io",
+  "remoteServiceBaseUrl": "http://localhost:62114",
   "appBaseUrl": "http://manage.iconiz.io",
   "localeMappings": [
     {
